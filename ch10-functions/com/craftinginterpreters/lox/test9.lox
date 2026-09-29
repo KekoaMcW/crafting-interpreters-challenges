@@ -1,0 +1,19 @@
+if (5 > 3) {
+  print "yes";
+} else {
+  print "no";
+}
+
+print true and false;
+print true or false;
+print false and "unreachable";
+
+var i = 0;
+while (i < 3) {
+  print i;
+  i = i + 1;
+}
+
+for (var j = 0; j < 3; j = j + 1) {
+  print j * 10;
+}
