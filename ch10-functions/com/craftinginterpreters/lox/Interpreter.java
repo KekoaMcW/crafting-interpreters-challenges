@@ -222,9 +222,16 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Void visitFunctionStmt(Stmt.Function stmt) {
         // Capture the current environment so the function can see
         // variables from where it was declared (closures).
-        LoxFunction function = new LoxFunction(stmt, environment);
-        environment.define(stmt.name.lexeme, function);
+        String fnName = stmt.name.lexeme;
+        environment.define(fnName,
+                new LoxFunction(fnName, stmt.function, environment));
         return null;
+    }
+
+    @Override
+    public Object visitFunctionExpr(Expr.Function expr) {
+        // Anonymous functions have no name, so they print as <fn>.
+        return new LoxFunction(null, expr, environment);
     }
 
     @Override

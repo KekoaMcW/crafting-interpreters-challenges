@@ -28,6 +28,18 @@ class AstPrinter implements Expr.Visitor<String> {
     }
 
     @Override
+    public String visitFunctionExpr(Expr.Function expr) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("(fun (");
+        for (int i = 0; i < expr.params.size(); i++) {
+            if (i > 0) builder.append(" ");
+            builder.append(expr.params.get(i).lexeme);
+        }
+        builder.append(") ...)");
+        return builder.toString();
+    }
+
+    @Override
     public String visitGroupingExpr(Expr.Grouping expr) {
         return parenthesize("group", expr.expression);
     }

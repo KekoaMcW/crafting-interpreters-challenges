@@ -1,0 +1,29 @@
+fun thrice(fn) {
+  for (var i = 1; i <= 3; i = i + 1) {
+    fn(i);
+  }
+}
+
+thrice(fun (a) {
+  print a;
+});
+
+var add = fun (a, b) { return a + b; };
+print add(2, 3);
+
+fun whichFn(fn) {
+  print fn;
+}
+whichFn(fun (b) { print b; });
+fun named(a) { print a; }
+whichFn(named);
+
+fun () {};
+
+print (fun (x) { return x * 2; })(21);
+
+fun makeAdder(n) {
+  return fun (x) { return x + n; };
+}
+var addTen = makeAdder(10);
+print addTen(5);
