@@ -8,7 +8,17 @@ import java.util.Map;
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     final Environment globals = new Environment();
     private Environment environment = globals;
-    private final Map<Expr, Integer> locals = new HashMap<>();
+    private static class Local {
+        final int depth;
+        final int slot;
+
+        Local(int depth, int slot) {
+            this.depth = depth;
+            this.slot = slot;
+        }
+    }
+
+    private final Map<Expr, Local> locals = new HashMap<>();
     private static final Object uninitialized = new Object();
 
     Interpreter() {
@@ -46,9 +56,16 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
     }
 
-    // Called by the resolver: how many scopes out this variable lives.
-    void resolve(Expr expr, int depth) {
-        locals.put(expr, depth);
+    void resolve(Expr expr, int depth, int slot) {
+        locals.put(expr, new Local(depth, slot));
+    }
+
+    private void declareVariable(String name, Object value) {
+        if (environment == globals) {
+            globals.define(name, value);
+        } else {
+            environment.defineSlot(value);
+        }
     }
 
     @Override
@@ -188,9 +205,9 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     private Object lookUpVariable(Token name, Expr expr) {
-        Integer distance = locals.get(expr);
-        if (distance != null) {
-            return environment.getAt(distance, name.lexeme);
+        Local local = locals.get(expr);
+        if (local != null) {
+            return environment.getAt(local.depth, local.slot);
         } else {
             return globals.get(name);
         }
@@ -200,9 +217,9 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Object visitAssignExpr(Expr.Assign expr) {
         Object value = evaluate(expr.value);
 
-        Integer distance = locals.get(expr);
-        if (distance != null) {
-            environment.assignAt(distance, expr.name, value);
+        Local local = locals.get(expr);
+        if (local != null) {
+            environment.assignAt(local.depth, local.slot, value);
         } else {
             globals.assign(expr.name, value);
         }
@@ -250,10 +267,8 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitFunctionStmt(Stmt.Function stmt) {
-        // Capture the current environment so the function can see
-        // variables from where it was declared (closures).
         String fnName = stmt.name.lexeme;
-        environment.define(fnName,
+        declareVariable(fnName,
                 new LoxFunction(fnName, stmt.function, environment));
         return null;
     }
@@ -290,7 +305,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             value = evaluate(stmt.initializer);
         }
 
-        environment.define(stmt.name.lexeme, value);
+        declareVariable(stmt.name.lexeme, value);
         return null;
     }
 

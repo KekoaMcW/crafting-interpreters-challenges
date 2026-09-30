@@ -28,10 +28,12 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     private static class Variable {
         final Token name;
         VariableState state;
+        final int slot;
 
-        Variable(Token name, VariableState state) {
+        Variable(Token name, VariableState state, int slot) {
             this.name = name;
             this.state = state;
+            this.slot = slot;
         }
     }
 
@@ -242,7 +244,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
             Lox.error(name, "Already a variable with this name in this scope.");
         }
 
-        scope.put(name.lexeme, new Variable(name, VariableState.DECLARED));
+        scope.put(name.lexeme,
+                new Variable(name, VariableState.DECLARED, scope.size()));
     }
 
     private void define(Token name) {
@@ -253,7 +256,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     private void resolveLocal(Expr expr, Token name, boolean isRead) {
         for (int i = scopes.size() - 1; i >= 0; i--) {
             if (scopes.get(i).containsKey(name.lexeme)) {
-                interpreter.resolve(expr, scopes.size() - 1 - i);
+                interpreter.resolve(expr, scopes.size() - 1 - i,
+                        scopes.get(i).get(name.lexeme).slot);
 
                 if (isRead) {
                     scopes.get(i).get(name.lexeme).state = VariableState.READ;

@@ -1,11 +1,14 @@
 package com.craftinginterpreters.lox;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
 class Environment {
     final Environment enclosing;
     private final Map<String, Object> values = new HashMap<>();
+    private final List<Object> slots = new ArrayList<>();
 
     Environment() {
         enclosing = null;
@@ -53,11 +56,15 @@ class Environment {
         return environment;
     }
 
-    Object getAt(int distance, String name) {
-        return ancestor(distance).values.get(name);
+    void defineSlot(Object value) {
+        slots.add(value);
     }
 
-    void assignAt(int distance, Token name, Object value) {
-        ancestor(distance).values.put(name.lexeme, value);
+    Object getAt(int distance, int slot) {
+        return ancestor(distance).slots.get(slot);
+    }
+
+    void assignAt(int distance, int slot, Object value) {
+        ancestor(distance).slots.set(slot, value);
     }
 }
