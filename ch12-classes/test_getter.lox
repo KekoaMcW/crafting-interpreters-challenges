@@ -1,0 +1,43 @@
+class Circle {
+  init(radius) {
+    this.radius = radius;
+  }
+
+  area {
+    return 3.14159 * this.radius * this.radius;
+  }
+
+  diameter {
+    return this.radius * 2;
+  }
+
+  describe() {
+    return "circle with diameter " + this.diameter;
+  }
+}
+
+var circle = Circle(4);
+print circle.area;
+print circle.diameter;
+print circle.describe();
+
+circle.radius = 1;
+print circle.diameter;
+
+class Temp {
+  class freezing {
+    return 32;
+  }
+}
+print Temp.freezing;
+
+class Counter {
+  init() { this.n = 0; }
+  next {
+    this.n = this.n + 1;
+    return this.n;
+  }
+}
+var c = Counter();
+print c.next;
+print c.next;
