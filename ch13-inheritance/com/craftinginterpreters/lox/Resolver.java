@@ -99,6 +99,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
         beginScope();
         declareImplicit(stmt.name, "this");
+        declareImplicit(stmt.name, "inner");
 
         for (Stmt.Function method : stmt.methods) {
             FunctionType declaration = FunctionType.METHOD;

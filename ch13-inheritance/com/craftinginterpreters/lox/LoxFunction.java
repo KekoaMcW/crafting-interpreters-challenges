@@ -16,9 +16,10 @@ class LoxFunction implements LoxCallable {
         this.isInitializer = isInitializer;
     }
 
-    LoxFunction bind(LoxInstance instance) {
+    LoxFunction bind(LoxInstance instance, LoxCallable inner) {
         Environment environment = new Environment(closure);
         environment.defineSlot(instance);
+        environment.defineSlot(inner);
         return new LoxFunction(name, declaration, environment, isInitializer);
     }
 
@@ -28,6 +29,7 @@ class LoxFunction implements LoxCallable {
 
     @Override
     public int arity() {
+        if (declaration.params == null) return 0;
         return declaration.params.size();
     }
 

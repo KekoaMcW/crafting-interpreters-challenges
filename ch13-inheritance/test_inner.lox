@@ -1,0 +1,87 @@
+class Doughnut {
+  cook() {
+    print "Fry until golden brown.";
+    inner();
+    print "Place in a nice box.";
+  }
+}
+
+class BostonCream < Doughnut {
+  cook() {
+    print "Pipe full of custard and coat with chocolate.";
+  }
+}
+
+BostonCream().cook();
+
+print "---";
+Doughnut().cook();
+
+print "---";
+class A {
+  greet() {
+    print "A before";
+    inner();
+    print "A after";
+  }
+}
+class B < A {
+  greet() {
+    print "B before";
+    inner();
+    print "B after";
+  }
+}
+class C < B {
+  greet() {
+    print "C";
+  }
+}
+C().greet();
+
+print "---";
+class Locked {
+  name() { return "locked"; }
+}
+class TriesToOverride < Locked {
+  name() { return "overridden"; }
+}
+print TriesToOverride().name();
+
+print "---";
+class Base {
+  wrap(x) { return "[" + inner(x) + "]"; }
+}
+class Mid < Base {
+  wrap(x) { return "<" + x + ">"; }
+}
+print Mid().wrap("hi");
+print Base().wrap("hi");
+
+print "---";
+class Parent {
+  only() { return "parent only"; }
+}
+class Kid < Parent {
+  extra() { return "kid extra"; }
+}
+var k = Kid();
+print k.only();
+print k.extra();
+
+print "---";
+class Shape {
+  init(name) {
+    this.name = name;
+    inner(name);
+  }
+  label { return "a " + this.name; }
+}
+class Square < Shape {
+  init(name) {
+    this.sides = 4;
+  }
+}
+var s = Square("square");
+print s.label;
+print s.sides;
