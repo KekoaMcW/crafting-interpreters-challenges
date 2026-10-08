@@ -1,0 +1,75 @@
+class Bagel {
+  eat() {
+    print "Crunch crunch crunch!";
+  }
+}
+var bagel = Bagel();
+print Bagel;
+print bagel;
+bagel.eat();
+
+class Cake {
+  taste() {
+    var adjective = "delicious";
+    print "The " + this.flavor + " cake is " + adjective + "!";
+  }
+}
+var cake = Cake();
+cake.flavor = "German chocolate";
+cake.taste();
+
+class Thing {
+  getCallback() {
+    fun localFunction() {
+      print this;
+    }
+    return localFunction;
+  }
+}
+var callback = Thing().getCallback();
+callback();
+
+class Point {
+  init(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+  sum() { return this.x + this.y; }
+  noThis() { return 42; }
+}
+var p = Point(3, 4);
+print p.sum();
+print p.noThis();
+var m = p.sum;
+print m();
+print p.init(10, 20);
+print p.sum();
+
+class Early {
+  init() {
+    this.value = "set";
+    return;
+    this.value = "unreachable";
+  }
+}
+print Early().value;
+
+{
+  class Local {
+    hi() { return "local class " + this.n; }
+  }
+  var l = Local();
+  l.n = 1;
+  print l.hi();
+}
+
+class Counter {
+  init() { this.n = 0; }
+  bump() {
+    var step = fun () { this.n = this.n + 1; };
+    step();
+    step();
+    return this.n;
+  }
+}
+print Counter().bump();
