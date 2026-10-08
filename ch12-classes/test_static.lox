@@ -1,0 +1,31 @@
+class Math {
+  class square(n) {
+    return n * n;
+  }
+  class twice(n) {
+    return this.square(n) + this.square(n);
+  }
+}
+print Math.square(3);
+print Math.twice(2);
+print Math;
+
+Math.pi = 3.14;
+print Math.pi;
+
+class Point {
+  init(x, y) { this.x = x; this.y = y; }
+  class origin() { return Point(0, 0); }
+  sum() { return this.x + this.y; }
+}
+var o = Point.origin();
+print o;
+print o.sum();
+print Point(2, 5).sum();
+
+{
+  class Local {
+    class make() { return Local(); }
+  }
+  print Local.make();
+}
