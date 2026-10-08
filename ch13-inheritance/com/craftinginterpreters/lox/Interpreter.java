@@ -35,6 +35,19 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             @Override
             public String toString() { return "<native fn>"; }
         });
+
+        globals.define("List", new LoxCallable() {
+            @Override
+            public int arity() { return 0; }
+
+            @Override
+            public Object call(Interpreter interpreter, List<Object> arguments) {
+                return new LoxList();
+            }
+
+            @Override
+            public String toString() { return "<native fn>"; }
+        });
     }
 
     void interpret(List<Stmt> statements) {
@@ -435,7 +448,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         throw new RuntimeError(operator, "Operands must be numbers.");
     }
 
-    private String stringify(Object object) {
+    static String stringify(Object object) {
         if (object == null) return "nil";
 
         if (object instanceof Double) {
