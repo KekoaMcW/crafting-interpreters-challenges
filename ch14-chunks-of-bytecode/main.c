@@ -21,6 +21,15 @@ int main(int argc, const char* argv[]) {
     writeChunk(&chunk, OP_RETURN, 125);
     writeChunk(&chunk, OP_RETURN, 125);
 
+    writeConstant(&chunk, 7.8, 126);
+
+    for (int i = 0; i < 300; i++) {
+        addConstant(&chunk, i);
+    }
+
+    writeConstant(&chunk, 9.9, 127);
+    writeChunk(&chunk, OP_RETURN, 127);
+
     disassembleChunk(&chunk, "test chunk");
     printf("%d bytes stored with %d line entries\n", chunk.count, chunk.lineCount);
     freeChunk(&chunk);
