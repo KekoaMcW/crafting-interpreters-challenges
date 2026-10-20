@@ -1,0 +1,7 @@
+print 1 + 2.5;
+var name = "Koa"; // comment
+if (name != nil and true) {
+  fun hi() { return this; }
+}
+@
+"unterminated
