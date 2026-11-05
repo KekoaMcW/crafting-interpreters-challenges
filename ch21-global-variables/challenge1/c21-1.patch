@@ -1,0 +1,51 @@
+--- a/compiler.c
++++ b/compiler.c
+@@ -5,6 +5,7 @@
+ #include "compiler.h"
+ #include "object.h"
+ #include "scanner.h"
++#include "table.h"
+ 
+ #ifdef DEBUG_PRINT_CODE
+ #include "debug.h"
+@@ -42,6 +43,7 @@
+ 
+ Parser parser;
+ Chunk* compilingChunk;
++Table stringConstants;
+ 
+ static Chunk* currentChunk() {
+     return compilingChunk;
+@@ -295,8 +297,15 @@
+ }
+ 
+ static uint8_t identifierConstant(Token* name) {
+-    return makeConstant(OBJ_VAL(copyString(name->start,
+-                                           name->length)));
++    ObjString* string = copyString(name->start, name->length);
++    Value indexValue;
++    if (tableGet(&stringConstants, string, &indexValue)) {
++        return (uint8_t)AS_NUMBER(indexValue);
++    }
++
++    uint8_t index = makeConstant(OBJ_VAL(string));
++    tableSet(&stringConstants, string, NUMBER_VAL((double)index));
++    return index;
+ }
+ 
+ static uint8_t parseVariable(const char* errorMessage) {
+@@ -390,6 +399,7 @@
+ 
+     parser.hadError = false;
+     parser.panicMode = false;
++    initTable(&stringConstants);
+ 
+     advance();
+ 
+@@ -398,5 +408,6 @@
+     }
+ 
+     endCompiler();
++    freeTable(&stringConstants);
+     return !parser.hadError;
+ }
