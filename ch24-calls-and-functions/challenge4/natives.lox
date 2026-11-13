@@ -1,0 +1,21 @@
+fun isPrime(n) {
+    if (n < 2) return false;
+    for (var i = 2; i <= floor(sqrt(n)); i = i + 1) {
+        if (n / i == floor(n / i)) return false;
+    }
+    return true;
+}
+
+var primes = "";
+for (var n = 1; n <= 30; n = n + 1) {
+    if (isPrime(n)) primes = primes + str(n) + " ";
+}
+print "Primes up to 30: " + primes;
+
+fun hypotenuse(a, b) {
+    return sqrt(a * a + b * b);
+}
+print "3-4-5 triangle: " + str(hypotenuse(3, 4));
+
+var name = "Crafting Interpreters";
+print name + " has " + str(len(name)) + " characters";
